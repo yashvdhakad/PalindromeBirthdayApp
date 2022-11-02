@@ -1,53 +1,52 @@
-const userDate = document.querySelector("#userDate");
-const checkBtn = document.querySelector("#checkBtn");
-const outputBox = document.querySelector("#outputBox");
-
-const reverseStr = (str) => {
-  let reversedStr = str.split("").reverse().join("");
+function reverseString(str) {
+  var reversedStr = str.split("").reverse().join("");
   return reversedStr;
-};
-
-const isPalidrome = (str) => {
-  let reversedStr = reverseStr(str);
-  return reversedStr === str;
-};
-
-const convertDateFromNumberToString = (date) => {
-  if (date.day < 10) {
-    date.day = "0" + date.day;
-  }
-  if (date.month < 10) {
-    date.month = "0" + date.month;
-  }
-  date.day = date.day.toString();
-  date.month = date.month.toString();
-  date.year = date.year.toString();
-  return date;
-};
-
-const convertDateToAllVariants = (predate) => {
-  let date =  convertDateFromNumberToString(predate);
-  let ddmmyyyy = date.day + date.month + date.year;
-  let mmddyyyy = date.month + date.day + date.year;
-  let yyyymmdd = date.year + date.month + date.day;
-  let ddmmyy = date.day + date.month + date.year.slice(-2);
-  let mmddyy = date.month + date.day + date.year.slice(-2);
-  let yymmdd = date.year.slice(-2) + date.month + date.day;
-
-  return [ddmmyyyy, mmddyyyy, yyyymmdd, ddmmyy, mmddyy, yymmdd];
 }
 
-const checkPalindromeForAllVariants = (date) => {
-  let allDates = convertDateToAllVariants(date);
-  let flag = false;
-  for (let i of allDates) {
-    if (isPalidrome(i)) {
-      flag = true;
-      break;
-    }
+function isStringPalindrome(str) {
+  var reversedString = reverseString(str);
+  return str === reversedString;
+}
+
+function getDateAsString(date) {
+  var dateInStr = { day: "", month: "", year: "" };
+
+  if (date.day < 10) {
+    dateInStr.day = "0" + date.day;
+  } else {
+    dateInStr.day = date.day.toString();
   }
-  console.log(flag);
-  return flag;
+
+  if (date.month < 10) {
+    dateInStr.month = "0" + date.month;
+  } else {
+    dateInStr.month = date.month.toString();
+  }
+
+  dateInStr.year = date.year.toString();
+  return dateInStr;
+}
+
+function getDateInAllFormats(date) {
+  var ddmmyyyy = date.day + date.month + date.year;
+  var mmddyyyy = date.month + date.day + date.year;
+  var yyyymmdd = date.year + date.month + date.day;
+  var ddmmyy = date.day + date.month + date.year.slice(-2);
+  var mmddyy = date.month + date.day + date.year.slice(-2);
+  var yyddmm = date.year.slice(-2) + date.day + date.month;
+
+  return [ddmmyyyy, mmddyyyy, yyyymmdd, ddmmyy, mmddyy, yyddmm];
+}
+
+function checkPalindromeForAllDateFormats(date) {
+  var dateFormatList = getDateInAllFormats(date);
+  var palindromeList = [];
+
+  for (var i = 0; i < dateFormatList.length; i++) {
+    var result = isStringPalindrome(dateFormatList[i]);
+    palindromeList.push(result);
+  }
+  return palindromeList;
 }
 
 function isLeapYear(year) {
@@ -166,6 +165,10 @@ function getPreviousPalindromeDate(date) {
   }
 }
 
+var userDate = document.querySelector("#userDate");
+var checkBtn = document.querySelector("#checkBtn");
+var outputBox = document.querySelector("#outputBox");
+
 function clickHandler(e) {
   var bdayString = userDate.value;
 
@@ -181,8 +184,8 @@ function clickHandler(e) {
       year: Number(yyyy),
     };
 
-    var dateStr = convertDateFromNumberToString(date);
-    var list = checkPalindromeForAllVariants(dateStr);
+    var dateStr = getDateAsString(date);
+    var list = checkPalindromeForAllDateFormats(dateStr);
     var isPalindrome = false;
 
     for (let i = 0; i < list.length; i++) {
